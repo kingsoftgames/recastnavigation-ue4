@@ -750,6 +750,11 @@ public:
 	}
 
 	void applyAreaCostOrder(unsigned char* costOrder);
+
+    unsigned int getTileIndex(const dtMeshTile* tile) const
+    {
+        return (unsigned int)(tile - m_tiles);
+    }
 	//@UE4 END
 	
 private:
