@@ -756,6 +756,12 @@ public:
         return (unsigned int)(tile - m_tiles);
     }
 	//@UE4 END
+
+    //xsj-zhugongbo BEGIN
+    dtPolyRef getPolyRefInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point) const;
+
+    dtPolyRef findNearestPolyInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point, float* nearestPoint) const;
+    //xsj-zhugongbo END
 	
 private:
 

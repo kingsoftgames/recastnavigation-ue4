@@ -1912,6 +1912,60 @@ int dtNavMesh::getMaxTiles() const
 	return m_maxTiles;
 }
 
+//xsj-zhugongbo BEGIN
+dtPolyRef dtNavMesh::getPolyRefInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point) const
+{
+    dtPolyRef polys[128];
+    int polyCount = queryPolygonsInTile(tile, min, max, polys, 128, true);
+
+    float verts[DT_VERTS_PER_POLYGON * 3];
+    for (int i = 0; i < polyCount; ++i)
+    {
+        dtPolyRef ref = polys[i];
+        dtPoly* poly = &(tile->polys[decodePolyIdPoly(ref)]);
+
+        const int nv = poly->vertCount;
+        for (int i = 0; i < nv; ++i)
+        {
+            dtVcopy(&verts[i * 3], &tile->verts[poly->verts[i] * 3]);
+        }
+
+        if (dtPointInPolygon(point, verts, nv))
+        {
+            return ref;
+        }
+    }
+
+    return 0;
+}
+
+dtPolyRef dtNavMesh::findNearestPolyInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point, float* nearestPoint) const
+{
+    dtPolyRef polys[128];
+    int polyCount = queryPolygonsInTile(tile, min, max, polys, 128, true);
+
+    dtPolyRef nearestRef = 0;
+    float nearestDistanceSqr = FLT_MAX;
+    for (int i = 0; i < polyCount; ++i)
+    {
+        dtPolyRef ref = polys[i];
+
+        float closestPtPoly[3];
+        closestPointOnPolyInTile(tile, decodePolyIdPoly(ref), point, closestPtPoly);
+
+        float d = dtVdistSqr(point, closestPtPoly);
+        if (d < nearestDistanceSqr)
+        {
+            dtVcopy(nearestPoint, closestPtPoly);
+            nearestDistanceSqr = d;
+            nearestRef = ref;
+        }
+    }
+
+    return nearestRef;
+}
+//xsj-zhugongbo END
+
 dtMeshTile* dtNavMesh::getTile(int i)
 {
 	return &m_tiles[i];
