@@ -1939,7 +1939,7 @@ dtPolyRef dtNavMesh::getPolyRefInTile(const dtMeshTile* tile, const float* min, 
     return 0;
 }
 
-dtPolyRef dtNavMesh::findNearestPolyInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point, float* nearestPoint) const
+dtPolyRef dtNavMesh::getNearestPolyInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point, float* nearestPoint) const
 {
     dtPolyRef polys[128];
     int polyCount = queryPolygonsInTile(tile, min, max, polys, 128, true);
