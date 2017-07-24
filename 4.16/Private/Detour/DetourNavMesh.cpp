@@ -1913,56 +1913,27 @@ int dtNavMesh::getMaxTiles() const
 }
 
 //xsj-zhugongbo BEGIN
-dtPolyRef dtNavMesh::getPolyRefInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point) const
+dtPolyRef dtNavMesh::getPolyRef(const dtMeshTile* tile, unsigned int ip)
 {
-    dtPolyRef polys[128];
-    int polyCount = queryPolygonsInTile(tile, min, max, polys, 128, true);
-
-    float verts[DT_VERTS_PER_POLYGON * 3];
-    for (int i = 0; i < polyCount; ++i)
-    {
-        dtPolyRef ref = polys[i];
-        dtPoly* poly = &(tile->polys[decodePolyIdPoly(ref)]);
-
-        const int nv = poly->vertCount;
-        for (int i = 0; i < nv; ++i)
-        {
-            dtVcopy(&verts[i * 3], &tile->verts[poly->verts[i] * 3]);
-        }
-
-        if (dtPointInPolygon(point, verts, nv))
-        {
-            return ref;
-        }
-    }
-
-    return 0;
+    const unsigned int it = (unsigned int)(tile - m_tiles);
+    return encodePolyId(tile->salt, it, ip);
 }
 
-dtPolyRef dtNavMesh::getNearestPolyInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point, float* nearestPoint) const
+bool dtNavMesh::isPointInPoly(const dtMeshTile* tile, unsigned int ip, const float* point)
 {
-    dtPolyRef polys[128];
-    int polyCount = queryPolygonsInTile(tile, min, max, polys, 128, true);
+    const dtPoly* poly = &(tile->polys[ip]);
+    if (poly->getType() == DT_POLYTYPE_OFFMESH_POINT)
+        return false;
 
-    dtPolyRef nearestRef = 0;
-    float nearestDistanceSqr = FLT_MAX;
-    for (int i = 0; i < polyCount; ++i)
+    float verts[DT_VERTS_PER_POLYGON * 3];
+    const int nv = poly->vertCount;
+
+    for (int i = 0; i < nv; ++i)
     {
-        dtPolyRef ref = polys[i];
-
-        float closestPtPoly[3];
-        closestPointOnPolyInTile(tile, decodePolyIdPoly(ref), point, closestPtPoly);
-
-        float d = dtVdistSqr(point, closestPtPoly);
-        if (d < nearestDistanceSqr)
-        {
-            dtVcopy(nearestPoint, closestPtPoly);
-            nearestDistanceSqr = d;
-            nearestRef = ref;
-        }
+        dtVcopy(&verts[i * 3], &tile->verts[poly->verts[i] * 3]);
     }
 
-    return nearestRef;
+    return dtPointInPolygon(point, verts, nv);
 }
 //xsj-zhugongbo END
 

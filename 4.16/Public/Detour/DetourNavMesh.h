@@ -758,9 +758,9 @@ public:
 	//@UE4 END
 
     //xsj-zhugongbo BEGIN
-    dtPolyRef getPolyRefInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point) const;
+    dtPolyRef getPolyRef(const dtMeshTile* tile, unsigned int ip);
 
-    dtPolyRef getNearestPolyInTile(const dtMeshTile* tile, const float* min, const float* max, const float* point, float* nearestPoint) const;
+    bool isPointInPoly(const dtMeshTile* tile, unsigned int ip, const float* point);
     //xsj-zhugongbo END
 	
 private:
