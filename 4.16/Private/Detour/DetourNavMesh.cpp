@@ -1913,13 +1913,13 @@ int dtNavMesh::getMaxTiles() const
 }
 
 //xsj-zhugongbo BEGIN
-dtPolyRef dtNavMesh::getPolyRef(const dtMeshTile* tile, unsigned int ip)
+dtPolyRef dtNavMesh::getPolyRef(const dtMeshTile* tile, unsigned int ip) const
 {
     const unsigned int it = (unsigned int)(tile - m_tiles);
     return encodePolyId(tile->salt, it, ip);
 }
 
-bool dtNavMesh::isPointInPoly(const dtMeshTile* tile, unsigned int ip, const float* point)
+bool dtNavMesh::isPointInPoly(const dtMeshTile* tile, unsigned int ip, const float* point) const
 {
     const dtPoly* poly = &(tile->polys[ip]);
     if (poly->getType() == DT_POLYTYPE_OFFMESH_POINT)

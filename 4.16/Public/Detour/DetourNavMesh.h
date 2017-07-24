@@ -758,9 +758,9 @@ public:
 	//@UE4 END
 
     //xsj-zhugongbo BEGIN
-    dtPolyRef getPolyRef(const dtMeshTile* tile, unsigned int ip);
+    dtPolyRef getPolyRef(const dtMeshTile* tile, unsigned int ip) const;
 
-    bool isPointInPoly(const dtMeshTile* tile, unsigned int ip, const float* point);
+    bool isPointInPoly(const dtMeshTile* tile, unsigned int ip, const float* point) const;
     //xsj-zhugongbo END
 	
 private:
