@@ -37,6 +37,8 @@ if not exist _intermediate (
 pushd _intermediate
 
 cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=%INSTALL_PATH%  ..\
+
+devenv %NAME%.sln /build "Debug" /project "INSTALL"
 devenv %NAME%.sln /build "RelWithDebInfo" /project "INSTALL"
 
 @goto end
