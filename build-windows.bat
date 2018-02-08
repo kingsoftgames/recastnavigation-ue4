@@ -3,18 +3,30 @@
 @cd /d "%~dp0"
 @echo off
 
-set VERSION=4.16
-set INSTALL_PATH=..\_build
+@REM 
+@REM Please make sure the following environment variables are set before calling this script:
+@REM RECASTNAVIGATION_UE4_VERSION - Release version string.
+@REM RECASTNAVIGATION_UE4_PREFIX  - Absolute install path prefix string.
+@REM 
 
-if not "%~1"=="" (
-    set VERSION="%~1"
+@if "%RECASTNAVIGATION_UE4_VERSION%"=="" (
+    echo RECASTNAVIGATION_UE4_VERSION is not set, exit.
+    exit /b 1
 )
 
-if not "%~2"=="" (
-    set INSTALL_PATH="%~2"
+@if "%RECASTNAVIGATION_UE4_PREFIX%"=="" (
+    echo RECASTNAVIGATION_UE4_PREFIX is not set, exit.
+    exit /b 1
 )
 
-set NAME=recastnavigation-ue4
+@if not exist %RECASTNAVIGATION_UE4_VERSION% (
+    echo Can not find version %RECASTNAVIGATION_UE4_VERSION%, exit.
+    exit /b 2
+)
+
+echo Build version %RECASTNAVIGATION_UE4_VERSION% now!
+
+set SOLUTION_NAME=recastnavigation-ue4.sln
 
 @REM -----------------------------------------------------------------------
 @REM Set Environment Variables for the Visual Studio Command Line
@@ -29,17 +41,17 @@ if exist "%VS2017DEVCMD%" (
     goto error_no_VS2017
 )
 
-pushd %VERSION%
+pushd %RECASTNAVIGATION_UE4_VERSION%
 
 if not exist _intermediate (
     md _intermediate
 )
 pushd _intermediate
 
-cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=%INSTALL_PATH%  ..\
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_INSTALL_PREFIX=%RECASTNAVIGATION_UE4_PREFIX%  ..\
 
-devenv %NAME%.sln /build "Debug" /project "INSTALL"
-devenv %NAME%.sln /build "RelWithDebInfo" /project "INSTALL"
+devenv %SOLUTION_NAME% /build "Debug" /project "INSTALL"
+devenv %SOLUTION_NAME% /build "RelWithDebInfo" /project "INSTALL"
 
 @goto end
 
@@ -52,5 +64,5 @@ devenv %NAME%.sln /build "RelWithDebInfo" /project "INSTALL"
 :end
 
 popd @rem pushd _intermediate
-popd @rem pushd %VERSION%
+popd @rem pushd %RECASTNAVIGATION_UE4_VERSION%
 
