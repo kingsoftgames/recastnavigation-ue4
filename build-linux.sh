@@ -24,6 +24,11 @@ else
     echo "RECASTNAVIGATION_UE4_PREFIX: $RECASTNAVIGATION_UE4_PREFIX"
 fi
 
+if [ ! -d "$RECASTNAVIGATION_UE4_VERSION" ]; then
+    echo "Can not find version $RECASTNAVIGATION_UE4_VERSION, exit."
+    exit 2
+fi
+
 #Don't display pushd/popd stacks
 pushd () {
     command pushd "$@" > /dev/null
@@ -45,7 +50,7 @@ echo "Valid build types are: Debug | Release | RelWithDebInfo | MinSizeRel"
 GENERATE_DIR=_intermediate
 
 if [ ! -d "$GENERATE_DIR" ]; then
-  mkdir $GENERATE_DIR
+    mkdir $GENERATE_DIR
 fi
 
 pushd $GENERATE_DIR
@@ -57,4 +62,3 @@ make install
 
 popd # pushd $GENERATE_DIR
 popd # pushd $RECASTNAVIGATION_UE4_VERSION
-
