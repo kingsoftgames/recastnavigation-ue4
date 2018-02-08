@@ -12,19 +12,21 @@
 @if "%RECASTNAVIGATION_UE4_VERSION%"=="" (
     echo RECASTNAVIGATION_UE4_VERSION is not set, exit.
     exit /b 1
+) else (
+    echo RECASTNAVIGATION_UE4_VERSION: %RECASTNAVIGATION_UE4_VERSION%
 )
 
 @if "%RECASTNAVIGATION_UE4_PREFIX%"=="" (
     echo RECASTNAVIGATION_UE4_PREFIX is not set, exit.
     exit /b 1
+) else (
+    echo RECASTNAVIGATION_UE4_PREFIX: %RECASTNAVIGATION_UE4_PREFIX%
 )
 
 @if not exist %RECASTNAVIGATION_UE4_VERSION% (
     echo Can not find version %RECASTNAVIGATION_UE4_VERSION%, exit.
     exit /b 2
 )
-
-echo Build version %RECASTNAVIGATION_UE4_VERSION% now!
 
 set SOLUTION_NAME=recastnavigation-ue4.sln
 
